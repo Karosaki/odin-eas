@@ -10,12 +10,21 @@
 }
 
 .square {
-    height: 6rem;
-    width: 6rem;
+    max-height: 6rem;
+    min-height: 2rem;
+    max-width: 6rem;
+    min-width: 2rem;
+    flex: 1 1 0;
     border-style: solid;
     border-color: black;
 }
 
-.square:hover {
-    
+.activated {
+    background-color: black;
+}
+
+.above-container {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
 }
