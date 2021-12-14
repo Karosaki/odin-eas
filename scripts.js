@@ -13,6 +13,20 @@ abContainer.appendChild(resetBtn);
 // Create the function for the reset button to work
 resetBtn.addEventListener('click', function(){
     squares.forEach(removeActivatedSquare);
+
+    let userInput = window.prompt('The board has been reset, how many lines of squares?');
+
+    // this only works once for now
+    if(userInput > 100 || userInput < 0){
+        alert('Please enter a number between 0 and 100');
+        userInput = window.prompt('The board has been reset, how many lines of squares?');
+        createDivGrid(userInput);
+    }
+
+    else{
+        createDivGrid(userInput);
+    }
+
 })
 
 // Function for creating the grid of squares
