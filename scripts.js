@@ -1,69 +1,79 @@
-// body
-const abContainer = document.querySelector('.above-container');
-
-// variable for the container
+// variables
 const container = document.querySelector('.container');
+// button for the user to select the size (1 - 7)
+const sizeBtn = document.querySelector('.size-button');
 
-// create the button for resetting the game
-const resetBtn = document.createElement('button');
-resetBtn.textContent = 'Click me to reset the board!'
-// Add the button to the page
-abContainer.appendChild(resetBtn);
+// modifiable height and width value
+let size = 0;
 
-// Create the function for the reset button to work
-resetBtn.addEventListener('click', function(){
-    squares.forEach(removeActivatedSquare);
-
-    let userInput = window.prompt('The board has been reset, how many lines of squares?');
-
-    // this only works once for now
-    if(userInput > 100 || userInput < 0){
-        alert('Please enter a number between 0 and 100');
-        userInput = window.prompt('The board has been reset, how many lines of squares?');
-        createDivGrid(userInput);
-    }
-
-    else{
-        createDivGrid(userInput);
-    }
-
-})
-
-// Function for creating the grid of squares
-function createDivGrid(noOfSquares){
+// function to create a certain amount of items (and add them to the container)
+function createItemsDefault(noOfItems){
     
-    // ensure that the number is even
-    if(noOfSquares % 2 === 0){
-
-        for(let i = 0; i < (noOfSquares * noOfSquares); i++){
-            let divSquare = document.createElement('div');
-            divSquare.className = 'square';
-            container.appendChild(divSquare);
-        }
+    for(let i = 0; i < noOfItems; i++){
+        let item = document.createElement('div');
+        item.className = 'item';
+        container.appendChild(item);
     }
 
-    // throw an error
-    else{
-        throw new Error('Argument must be an even number');
+}
+
+// adjustable width/height create function
+
+function createItemsUser(squareSize, noOfSquares){
+    for(let i = 0; i < noOfSquares; i++){
+        let item = document.createElement('div');
+        item.className = 'item';
+
+        // change the height and width accordingly
+        item.style.height = `${squareSize}px`
+        item.style.width = `${squareSize}px`
+        container.appendChild(item);
     }
 }
 
-// Create the grid by calling the function
-createDivGrid(16);
+// Default: Start the creation with 256 (16 x 16) squares of 32px h/w
+createItemsDefault(256);
+addHover();
 
-// get nodelist of all the squares created
-let squares = document.querySelectorAll('.square');
+// functionality for the button, asks the user to select a size from 1-7, stores that result
+sizeBtn.addEventListener('click', function(){
+    size = parseInt(getSize());
+    console.log(size);
 
-// iterate through all the squares, listen for mouseoever event and add activated class
-function testFunction(square){
-    square.addEventListener('mouseover', function(){
-        square.classList.add('activated');
-    })
+    // remove the entire current board
+    let removeableSquares = document.querySelectorAll('.item');
+    removeableSquares.forEach(squares => {
+        squares.remove();
+    });
+
+    // create the new board
+    let squareSize = 2 ** size;
+    let noOfSquares = (512 / squareSize) ** 2;
+
+    createItemsUser(squareSize, noOfSquares);
+    addHover();
+});
+
+function getSize(){
+    let userSize = window.prompt('Please select your chosen size from 1 - 7');
+
+    while(userSize > 7 || userSize < 1){
+        alert('Your chosen number is outside the requried range, please try again');
+        userSize = window.prompt('Please select your chosen size from 1 - 7');
+    }
+
+    return userSize;
 }
-squares.forEach(testFunction)
 
+// add the actual hover effect
+// event listener for when the user mouses over a div then adds it to the activated class which has a black background
 
-// function to remove activated from the squares
-function removeActivatedSquare(square){
-    square.classList.remove('activated');
+function addHover() {
+    let hoverSquares = document.querySelectorAll('.item');
+
+    hoverSquares.forEach(square => {
+        square.addEventListener('mouseover', function(){
+            square.classList.add('activated');
+        });
+    });
 }
